@@ -1,6 +1,6 @@
 <template>
     <button :class="button_data[color] + ' ' + _class">
-        <router-link v-if="a != null" :to="a">
+        <router-link v-if="to != null" :to="to">
             <slot />
         </router-link>
         <slot v-else />
@@ -20,14 +20,10 @@ export default {
             required: true
         },
         _class: {
-            required: false
-        },
-        intensity: {
             required: false,
-            type: Number,
-            default: 400
+            default: ''
         },
-        a: {
+        to: {
             required: false,
             type: String,
         }

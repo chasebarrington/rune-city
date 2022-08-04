@@ -10,7 +10,7 @@ export default {
 <template>
   <div>
     <h1>hey</h1> 
-    <Button a="/login" color="emerald">
+    <Button to="/login" color="emerald">
       login
     </Button>
   </div>
