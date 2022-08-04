@@ -1,14 +1,15 @@
 /* eslint-disable no-unused-vars */
 let express     = require('express'),
+    http        = require('http'),
+    WebSocket   = require("ws"),
     cors        = require('cors'),
     mongoose    = require('mongoose'),
     database    = require('./database'),
     bodyParser  = require('body-parser'),
     createError = require('http-errors'),
-    path        = require("path")
-    bcrypt      = require('bcrypt');
-    jwt         = require('jsonwebtoken');
-    auth        = require('./middleware/auth');
+    path        = require("path"),
+    jwt         = require('jsonwebtoken'),
+    auth        = require('./middleware/auth')
 
 require('dotenv').config();
 
@@ -26,10 +27,13 @@ mongoose.connect(database.db, {
 const userRoute = require('./route/user');
 
 const app = express();
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: true
 }))
+
+const server = http.createServer(app);
 
 // Cors
 app.use(cors());
@@ -45,9 +49,45 @@ app.get('/*', (req, res) => {
 
 // CREATE PORT
 const port = process.env.PORT || 4000;
-const server = app.listen(port, () => {
+server.listen(port, () => {
     console.log('listening @ ' + server.address().port);
 })
+
+function uuidv4() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+    });
+}
+
+const clients = new Map();
+const wss = new WebSocket.Server( { server } );
+wss.on('connection', (ws) => {
+
+    const id = uuidv4();
+    const color = Math.floor(Math.random() * 360);
+    const metadata = { id, color };
+
+    clients.set(ws, metadata);
+
+    ws.on('message', (data) => {
+        const message = JSON.parse(data.toString());
+        console.log(message);
+
+        // send message to client
+        wss.clients.forEach((client) => {
+            if (client.readyState === WebSocket.OPEN) {
+                client.send(JSON.stringify(message));
+            }
+        });
+    })
+
+    ws.on("close", () => {
+        console.log('client disconnected', id);
+        clients.delete(ws);
+    });
+
+});
 
 // 404 Handler
 app.use((req, res, next) => {
