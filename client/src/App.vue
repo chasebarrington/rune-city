@@ -1,3 +1,16 @@
+<script>
+import chat from './components/chat.vue'
+export default {
+  components: {
+    chat
+  }
+}
+</script>
+
+
 <template>
-  <router-view/>
+  <div class="flex">
+    <chat></chat>
+    <router-view/>
+  </div>
 </template>

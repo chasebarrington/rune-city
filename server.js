@@ -62,6 +62,7 @@ function uuidv4() {
 
 const clients = new Map();
 const wss = new WebSocket.Server( { server } );
+const msgs = [];
 wss.on('connection', (ws) => {
 
     const id = uuidv4();
@@ -69,10 +70,22 @@ wss.on('connection', (ws) => {
     const metadata = { id, color };
 
     clients.set(ws, metadata);
+    
+    // send the list of messages to the new client
+    // wait 1 second and send the list of messages to the new client
+    setTimeout(() => {
+        ws.send(JSON.stringify(msgs));
+    }, 1000);
 
     ws.on('message', (data) => {
         const message = JSON.parse(data.toString());
-        console.log(message);
+        
+        // store message in array
+        // if array is greater than 30, remove first element
+        if (msgs.length > 100) {
+            msgs.shift();
+        }
+        msgs.push(message);
 
         // send message to client
         wss.clients.forEach((client) => {
