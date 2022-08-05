@@ -26,8 +26,7 @@ export default {
         this.message = this.message.replace(/\n{2,}/g, '\n');
 
         this.$socket.send(JSON.stringify({
-            message: this.message,
-            opacity: 100
+            message: this.message
         }))
         this.message = '';
     }
@@ -63,14 +62,14 @@ export default {
 </script>
 
 <template>
-  <div class="bg-zinc-900 max-w-[20rem] px-2 py-2 md:w-fit h-screen grid place-content-end absolute -left-80 lg:left-0 lg:relative transition-all">
-    <div id="chatbox" class="no-scrollbar overflow-y-auto flex flex-col">
-      <p class="text-zinc-100 max-w-xl break-words px-2 py-1 my-1 whitespace-pre-line transition-opacity delay-100 bg-zinc-800 rounded-md" v-for="(message, index) in messages" :class="'opacity-' + message.opacity" :key="index">
+  <div class="container w-72">
+    <div id="chatbox" class="no-scrollbar overflow-y-auto flex flex-col gap-y-2">
+      <p v-for="(message, index) in messages" :key="index">
         {{message.message}}
       </p>
     </div>
-    <div class="text-rose-500 py-2" v-if="footerText">{{footerText}}</div>
-    <div class="mt-1 grid grid-cols-3">
+    <div class="text-rose-500 pt-2 text-center" v-if="footerText">{{footerText}}</div>
+    <div class="mt-2 grid grid-cols-3">
       <textarea @keydown.enter.exact.prevent="send" @keydown.enter.shift.exact.prevent="message += '\r\n'" class="appearance-none rounded-md px-2 py-1 outline-none resize-none overflow-y-hidden mr-2 h-9 col-span-2" v-model="message" />
       <Button @click="send" color="emerald">
         send
@@ -80,6 +79,32 @@ export default {
 </template>
 
 <style>
+p {
+    @apply text-zinc-100;
+    @apply max-w-xl;
+    @apply break-words;
+    @apply px-2;
+    @apply py-1;
+    @apply whitespace-pre-line;
+    @apply bg-zinc-800;
+    @apply rounded-md;
+}
+
+.container {
+    background-color: rgb(24 24 27);
+    padding: 8px;
+    height: 100vh;
+    display: grid;
+    place-content: end;
+    position: absolute;
+    left: -18rem;
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+    @apply lg:left-0;
+    @apply lg:relative;
+}
+
 .no-scrollbar::-webkit-scrollbar {
     display: none;
 }
@@ -88,4 +113,5 @@ export default {
     -ms-overflow-style: none;
     scrollbar-width: none;
 }
+
 </style>
