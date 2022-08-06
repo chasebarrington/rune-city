@@ -1,4 +1,5 @@
 <script>
+
 import Button from './ui/button.vue'
 export default {
   data() {
@@ -59,59 +60,71 @@ export default {
     Button
   }
 }
+
 </script>
 
 <template>
-  <div class="container w-72">
-    <div id="chatbox" class="no-scrollbar overflow-y-auto flex flex-col gap-y-2">
-      <p v-for="(message, index) in messages" :key="index">
-        {{message.message}}
-      </p>
+  <div class="bg-zinc-900 w-screen lg:w-80 h-screen fixed lg:relative">
+    <div class="inputbox">
+      <textarea class="resize-none px-2 py-2" v-model="message" @keydown.enter.exact.prevent="send" @keydown.enter.shift.exact.prevent="message += '\r\n'" />
+      <Button @click="send" color="emerald">send</Button>
     </div>
-    <div class="text-rose-500 pt-2 text-center" v-if="footerText">{{footerText}}</div>
-    <div class="mt-2 grid grid-cols-3">
-      <textarea @keydown.enter.exact.prevent="send" @keydown.enter.shift.exact.prevent="message += '\r\n'" class="appearance-none rounded-md px-2 py-1 outline-none resize-none overflow-y-hidden mr-2 h-9 col-span-2" v-model="message" />
-      <Button @click="send" color="emerald">
-        send
-      </Button>
+    <div class="messagebox">
+      <div id="chatbox" class="messages">
+        <div v-for="(message, index) in messages" :key="index" class="message">
+          {{message.message}}
+        </div>
+      </div>
+      <div v-if="footerText" class="text-rose-500 text-center mt-2">{{footerText}}</div>
     </div>
   </div>
 </template>
 
 <style>
-p {
-    @apply text-zinc-100;
-    @apply max-w-xl;
-    @apply break-words;
-    @apply px-2;
-    @apply py-1;
-    @apply whitespace-pre-line;
-    @apply bg-zinc-800;
-    @apply rounded-md;
+
+.inputbox {
+  width:100%;
+  height:2.5rem;
+  padding-left:8px;
+  padding-right:8px;
+  display:flex;
+  column-gap:8px;
+  position:absolute;
+  bottom:8px;
 }
 
-.container {
-    background-color: rgb(24 24 27);
-    padding: 8px;
-    height: 100vh;
-    display: grid;
-    place-content: end;
-    position: absolute;
-    left: -18rem;
-    transition-property: all;
-    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-    transition-duration: 150ms;
-    @apply lg:left-0;
-    @apply lg:relative;
+textarea {
+  width:100%;
+  border-radius:6px;
+  overflow-y: hidden;
+  outline:none;
 }
 
-.no-scrollbar::-webkit-scrollbar {
+.message {
+  color: white;
+  background-color: rgb(39 39 42);
+  padding: 4px;
+  border-radius: 4px;
+  margin-top: 4px;
+}
+
+.messages {
+  overflow-y: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.messages::-webkit-scrollbar {
     display: none;
 }
 
-.no-scrollbar {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
+.messagebox {
+    width: 100%;
+    height: calc(100% - 3rem);
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
 }
 
 </style>
