@@ -1,3 +1,49 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+    h1 {
+        @apply text-4xl;
+        @apply font-extrabold;
+        @apply font-sans;
+    }
+
+    h2 {
+        @apply text-zinc-200;
+        @apply text-lg;
+        @apply font-medium;
+        @apply font-sans;
+    }
+
+    p {
+        @apply text-zinc-400;
+        @apply font-sans;
+        @apply font-medium;
+        @apply text-sm;
+    }
+
+    @media (min-width: 340px) {
+        h1 {
+            @apply text-5xl;
+        }
+    }
+
+    @media (min-width: 768px) {
+        h1 {
+            @apply text-6xl;
+        }
+        h2 {
+            @apply text-xl
+        }
+    }
+
+    @media (min-width: 1024px) {
+        h1 {
+            font-size: 76px;
+        }
+        h2 {
+            @apply text-2xl
+        }
+    }
+}

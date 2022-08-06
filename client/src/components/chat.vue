@@ -2,6 +2,12 @@
 
 import Button from './ui/button.vue'
 export default {
+  props: {
+    minimized: {
+      required: true,
+      default: false
+    }
+  },
   data() {
     return {
       message: '',
@@ -30,6 +36,9 @@ export default {
             message: this.message
         }))
         this.message = '';
+    },
+    toggle() {
+      this.minimized = !this.minimized;
     }
   },
   mounted() {
@@ -64,14 +73,14 @@ export default {
 </script>
 
 <template>
-  <div class="bg-zinc-900 w-screen lg:w-80 h-screen fixed lg:relative">
+  <div class="bg-zinc-900 border-r border-r-zinc-700 w-screen h-screen-nav lg:w-80 fixed" :class="minimized ? '-left-[100vw]' : 'left-0'">
     <div class="inputbox">
       <textarea class="resize-none px-2 py-2" v-model="message" @keydown.enter.exact.prevent="send" @keydown.enter.shift.exact.prevent="message += '\r\n'" />
       <Button @click="send" color="emerald">send</Button>
     </div>
     <div class="messagebox">
       <div id="chatbox" class="messages">
-        <div v-for="(message, index) in messages" :key="index" class="message">
+        <div v-for="(message, index) in messages" :key="index" class="message break-words whitespace-pre-line">
           {{message.message}}
         </div>
       </div>
@@ -101,11 +110,13 @@ textarea {
 }
 
 .message {
-  color: white;
-  background-color: rgb(39 39 42);
+  color: rgb(147 197 253);
+  background-color: rgb(51 65 85);
   padding: 4px;
-  border-radius: 4px;
   margin-top: 4px;
+  border-radius: 0.125rem;
+  border-bottom-width: 1px;
+  border-bottom-color: rgb(63 63 70);
 }
 
 .messages {

@@ -11,7 +11,8 @@
 
 const button_data = {
   emerald: 'bg-emerald-400 hover:bg-emerald-300',
-  sky: 'bg-sky-400 hover:bg-sky-300'
+  sky: 'bg-sky-400 hover:bg-sky-300',
+  slate: 'bg-slate-700 hover:bg-slate-600 text-blue-300',
 };
 
 export default {
