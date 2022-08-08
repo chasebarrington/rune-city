@@ -6,5 +6,5 @@ import VueNativeSock from "vue-native-websocket-vue3";
 
 createApp(App)
     .use(router)
-    .use(VueNativeSock, "ws://localhost:4000/ws", {})
+    .use(VueNativeSock, '' + import.meta.env.VITE_WEBSOCKET, {})
     .mount('#app')

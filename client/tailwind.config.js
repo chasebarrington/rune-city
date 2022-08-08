@@ -10,9 +10,11 @@ module.exports = {
       },
       height: {
         'screen-nav': 'calc(100vh - 56px)',
+        'screen-nav-mob': 'calc(-webkit-fill-available - 56px)',
       },
       minHeight: {
         'screen-nav': 'calc(100vh - 56px)',
+        'screen-nav-mob': 'calc(-webkit-fill-available - 56px)',
       }
     },
   },

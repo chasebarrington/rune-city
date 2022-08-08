@@ -39,9 +39,17 @@ export default {
     },
     toggle() {
       this.minimized = !this.minimized;
+    },
+    resizeWindow() {
+      var chat = document.getElementById("chat");
+      chat.style.height = window.innerHeight - 56 + 'px';
     }
   },
   mounted() {
+
+    this.resizeWindow();
+    window.addEventListener("resize", this.resizeWindow);
+
     this.$options.sockets.onmessage = (msg) => {
 
       const message = JSON.parse(msg.data);
@@ -65,6 +73,9 @@ export default {
 
     }
   },
+  destroyed() {
+    window.removeEventListener("resize", this.resizeWindow);
+  },
   components: {
     Button
   }
@@ -73,7 +84,7 @@ export default {
 </script>
 
 <template>
-  <div class="bg-zinc-900 border-r border-r-zinc-700 w-screen h-screen-nav lg:w-80 fixed" :class="minimized ? '-left-[100vw]' : 'left-0'">
+  <div id="chat" class="bg-zinc-900 border-r border-r-zinc-700 w-screen lg:w-80 fixed" :class="minimized ? '-left-[100vw]' : 'left-0'">
     <div class="inputbox">
       <textarea class="resize-none px-2 py-2" v-model="message" @keydown.enter.exact.prevent="send" @keydown.enter.shift.exact.prevent="message += '\r\n'" />
       <Button @click="send" color="emerald">send</Button>
@@ -115,8 +126,6 @@ textarea {
   padding: 4px;
   margin-top: 4px;
   border-radius: 0.125rem;
-  border-bottom-width: 1px;
-  border-bottom-color: rgb(63 63 70);
 }
 
 .messages {

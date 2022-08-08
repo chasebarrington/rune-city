@@ -8,6 +8,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "vite-plugin-compression": "^0.5.1",
     "vue": "^3.2.25",
     "vue-native-websocket-vue3": "^3.1.6",
     "vue-router": "^4.1.3"
