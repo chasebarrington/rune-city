@@ -1,6 +1,6 @@
 <script>
-
 import Button from './ui/button.vue'
+import useAuthStore from '../store/auth';
 export default {
   props: {
     minimized: {
@@ -23,19 +23,27 @@ export default {
         }, 1000)
     },
     send() {
-
+      
         // if message is just whitespace return
         if (!this.message || this.message.trim() === '') { 
             return this.notify('invalid message')
         };
         
+        let store = useAuthStore();
+
+        // check if user is logged in and user is valid
+        if (!store.isLoggedIn || !store.user) {
+            return this.notify('not logged in')
+        }
+
         // if message has more than one newline in a row, replace it with just one
         this.message = this.message.replace(/\n{2,}/g, '\n');
 
-        this.$socket.send(JSON.stringify({
+        this.$socket.sendObj({
             type: 'message',
+            token: store.token,
             msg: this.message
-        }))
+        });
         this.message = '';
     },
     toggle() {
@@ -54,6 +62,9 @@ export default {
     this.$options.sockets.onmessage = (msg) => {
 
       const message = JSON.parse(msg.data);
+      if (message.type != 'message') {
+        return;
+      }
       
       // if the message is an array, it's a batch of messages
       if (Array.isArray(message)) {
@@ -93,7 +104,7 @@ export default {
     <div class="messagebox">
       <div id="chatbox" class="messages">
         <div v-for="(message, index) in messages" :key="index" class="message break-words whitespace-pre-line">
-          {{message.msg}}
+          {{message.user + ': ' + message.msg}}
         </div>
       </div>
       <div v-if="footerText" class="text-rose-500 text-center mt-2">{{footerText}}</div>

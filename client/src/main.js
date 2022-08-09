@@ -1,4 +1,4 @@
-import { createApp } from 'vue'
+import { createApp, markRaw } from 'vue';
 import App from './App.vue'
 import './index.css'
 import router from './routes'
@@ -6,11 +6,15 @@ import VueNativeSock from "vue-native-websocket-vue3";
 import { createPinia } from 'pinia'
 import { useSocketStoreWithOut } from './store/useSocketStore';
 
-
 const app = createApp(App);
+const pinia = createPinia();
 const store = useSocketStoreWithOut();
-app.use(createPinia())
-app.use(router)
+
+pinia.use(({ store }) => {
+    store.$router = markRaw(router)
+});
+
+app.use(pinia);
 app.use(VueNativeSock, '' + import.meta.env.VITE_WEBSOCKET, {
     store: store,
     format: "json",
@@ -19,6 +23,8 @@ app.use(VueNativeSock, '' + import.meta.env.VITE_WEBSOCKET, {
     reconnectionAttempts: 5,
     reconnectionDelay: 3000
 });
+
+app.use(router);
 
 app.mount('#app');
 

@@ -9,7 +9,6 @@ export default {
 
 <template>
   <div class="antialiased bg-zinc-900 w-screen min-h-screen-nav text-center max-w-none px-4">
-    <NavBar/>
     <div class="max-w-xl md:max-w-2xl lg:max-w-3xl mx-auto py-24">
       <h1 class="text-transparent bg-clip-text bg-gradient-to-br from-green-400 via-teal-400 to-indigo-400 py-2 px-6 mb-6">The quick and easy way to rune riches</h1>
       <h2 class="text-center text-zinc-400">An online community for exchanging virtual goods.</h2>
@@ -44,45 +43,3 @@ export default {
     </div>
   </div>
 </template>
-
-<style scoped>
-h1 {
-    @apply text-4xl;
-    @apply font-extrabold;
-    @apply font-sans;
-}
-h2 {
-    @apply text-zinc-200;
-    @apply text-lg;
-    @apply font-medium;
-    @apply font-sans;
-}
-p {
-    @apply text-zinc-400;
-    @apply font-sans;
-    @apply font-medium;
-    @apply text-sm;
-}
-@media (min-width: 340px) {
-    h1 {
-        @apply text-5xl;
-    }
-}
-@media (min-width: 768px) {
-    h1 {
-        @apply text-6xl;
-    }
-    h2 {
-        @apply text-xl
-    }
-}
-@media (min-width: 1024px) {
-    h1 {
-        font-size: 76px;
-    }
-    h2 {
-        @apply text-2xl
-    }
-}
-
-</style>

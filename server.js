@@ -8,8 +8,8 @@ let express     = require('express'),
     bodyParser  = require('body-parser'),
     createError = require('http-errors'),
     path        = require("path"),
-    jwt         = require('jsonwebtoken'),
-    auth        = require('./middleware/auth')
+    chat        = require('./messages/chat'),
+    auth        = require('./messages/auth')
 
 require('dotenv').config();
 
@@ -60,38 +60,43 @@ function uuidv4() {
     });
 }
 
+function safe_parse(msg) {
+    try {
+        return JSON.parse(msg.toString());
+    } catch (e) {
+        return null;
+    }
+}
+
 const clients = new Map();
 const wss = new WebSocket.Server( { server } );
-const msgs = [];
+
 wss.on('connection', (ws) => {
 
     const id = uuidv4();
-    const color = Math.floor(Math.random() * 360);
-    const metadata = { id, color };
-
+    const metadata = { id };
     clients.set(ws, metadata);
-    
-    // send the list of messages to the new client
-    // wait 1 second and send the list of messages to the new client
-    setTimeout(() => {
-        ws.send(JSON.stringify(msgs));
-    }, 1000);
+    ws.clients = clients;
+
+    chat.send_history(ws);
 
     ws.on('message', (data) => {
-        const message = JSON.parse(data.toString());
-        
-        if(message.type == 'message') {
-            if (msgs.length > 100) {
-                msgs.shift();
-            }
-            msgs.push(message);
+        const message = safe_parse(data);
+        if (!message) {
+            return;
+        }
 
-            // send message to client
-            wss.clients.forEach((client) => {
-                if (client.readyState === WebSocket.OPEN) {
-                    client.send(JSON.stringify(message));
-                }
-            });
+        // switch statement for message types
+        switch (message.type) {
+            case 'message':
+                chat.say(message, ws, wss);
+                break;
+            case 'auth':
+                auth.handle(message, ws, wss);
+                break;
+            default:
+                break;
+                
         }
     })
 

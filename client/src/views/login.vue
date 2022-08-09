@@ -1,6 +1,5 @@
 <template>
   <div class="antialiased bg-zinc-900 min-h-screen-nav w-full text-center max-w-none px-4">
-    <NavBar/>
     <div class="max-w-xl lg:max-w-2xl mx-auto py-24">
       <h1 class="text-zinc-200 py-2 px-6 mb-6">Log in</h1>
         <div class="w-full max-w-xs mt-12 mx-auto">
@@ -35,7 +34,45 @@
 
 <script>
 import Button from '../components/ui/button.vue'
+import useAuthStore from '../store/auth'
+
 export default {
+  data() {
+    return {
+      username: '',
+      password: '',
+      error: ''
+    }
+  },
+  methods: {
+    submit() {
+      if(this.username == '' || this.password == '') {
+        this.error = 'Please fill in all fields';
+        return
+      }
+      this.$socket.sendObj({
+          type: 'auth',
+          action: 'login',
+          username: this.username,
+          password: this.password
+      });
+    }
+  },
+  mounted() {
+    let store = useAuthStore();
+    if(store.isLoggedIn) {
+      return this.$router.push('/dashboard');
+    }
+
+    this.$options.sockets.onmessage = (msg) => {
+      const message = JSON.parse(msg.data);
+      if(message.type == 'auth') {
+          store.login(message.user, message.token);
+      } else if(message.type == 'error') {
+          this.error = message.message;
+      } 
+    }
+  },
   components: {
     Button
   }
