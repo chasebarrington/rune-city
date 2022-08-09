@@ -33,7 +33,8 @@ export default {
         this.message = this.message.replace(/\n{2,}/g, '\n');
 
         this.$socket.send(JSON.stringify({
-            message: this.message
+            type: 'message',
+            msg: this.message
         }))
         this.message = '';
     },
@@ -92,7 +93,7 @@ export default {
     <div class="messagebox">
       <div id="chatbox" class="messages">
         <div v-for="(message, index) in messages" :key="index" class="message break-words whitespace-pre-line">
-          {{message.message}}
+          {{message.msg}}
         </div>
       </div>
       <div v-if="footerText" class="text-rose-500 text-center mt-2">{{footerText}}</div>

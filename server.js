@@ -80,19 +80,19 @@ wss.on('connection', (ws) => {
     ws.on('message', (data) => {
         const message = JSON.parse(data.toString());
         
-        // store message in array
-        // if array is greater than 30, remove first element
-        if (msgs.length > 100) {
-            msgs.shift();
-        }
-        msgs.push(message);
-
-        // send message to client
-        wss.clients.forEach((client) => {
-            if (client.readyState === WebSocket.OPEN) {
-                client.send(JSON.stringify(message));
+        if(message.type == 'message') {
+            if (msgs.length > 100) {
+                msgs.shift();
             }
-        });
+            msgs.push(message);
+
+            // send message to client
+            wss.clients.forEach((client) => {
+                if (client.readyState === WebSocket.OPEN) {
+                    client.send(JSON.stringify(message));
+                }
+            });
+        }
     })
 
     ws.on("close", () => {
