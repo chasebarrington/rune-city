@@ -4,6 +4,7 @@ const WebSocket = require('ws');
 let msgs = [];
 
 function send_history(ws) {
+    console.log(msgs);
     setTimeout(() => {
         ws.send(JSON.stringify(msgs));
     }, 1000);
@@ -28,17 +29,17 @@ function say(message, ws, wss) {
             message: 'Invalid token'
         }));
     }
-    
-    if (msgs.length > 100) {
-        msgs.shift();
-    }
-    msgs.push(message);
 
     let new_msg = {
         type: 'message',
         msg: message.msg,
         user: message.user
     }
+    
+    if (msgs.length > 100) {
+        msgs.shift();
+    }
+    msgs.push(new_msg);
 
     // send message to client
     wss.clients.forEach((client) => {

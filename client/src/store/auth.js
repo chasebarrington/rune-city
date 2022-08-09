@@ -32,7 +32,7 @@ export default defineStore({
     },
     getters: {
         isLoggedIn() {
-            const token = this.token;
+            const token = this.token || localStorage.getItem('token');
             return !!token && !isTokenExpired(token);
         }
     }

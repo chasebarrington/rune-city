@@ -32,7 +32,7 @@ export default {
         let store = useAuthStore();
 
         // check if user is logged in and user is valid
-        if (!store.isLoggedIn || !store.user) {
+        if (!store.isLoggedIn) {
             return this.notify('not logged in')
         }
 
@@ -60,9 +60,9 @@ export default {
     window.addEventListener("resize", this.resizeWindow);
 
     this.$options.sockets.onmessage = (msg) => {
-
+      
       const message = JSON.parse(msg.data);
-      if (message.type != 'message') {
+      if (message.type != 'message' && !Array.isArray(message)) {
         return;
       }
       
@@ -96,7 +96,7 @@ export default {
 </script>
 
 <template>
-  <div id="chat" class="bg-zinc-900 border-r border-r-zinc-700 w-screen lg:w-80 fixed" :class="minimized ? '-left-[100vw]' : 'left-0'">
+  <div id="chat" class="bg-zinc-900 border-r border-r-zinc-700 w-screen lg:w-80 fixed z-10" :class="minimized ? '-left-[100vw]' : 'left-0'">
     <div class="inputbox">
       <textarea class="resize-none px-2 py-2" v-model="message" @keydown.enter.exact.prevent="send" @keydown.enter.shift.exact.prevent="message += '\r\n'" />
       <Button @click="send" color="emerald">send</Button>

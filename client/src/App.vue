@@ -23,6 +23,6 @@ export default {
   </navbar>
   <div class="flex mt-14">
     <chat :minimized="toggle"></chat>
-    <router-view :class="toggle ? '' : 'ml-0 lg:ml-80'" />
+    <router-view :class="toggle ? 'w-full' : 'w-full ml-0 lg:ml-80'" />
   </div>
 </template>
