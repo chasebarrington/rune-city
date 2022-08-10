@@ -58,9 +58,6 @@ export default {
     }
   },
   mounted() {
-    if(this.$auth.isLoggedIn) {
-      return this.$router.push('/dashboard');
-    }
     this.$options.sockets.onmessage = (msg) => {
       const message = JSON.parse(msg.data);
       if(message.type == 'auth') {

@@ -4,12 +4,14 @@ const home = () => import('./views/home.vue')
 const login = () => import('./views/login.vue')
 const register = () => import('./views/register.vue')
 const dashboard = () => import('./views/dashboard.vue')
+const blackjack = () => import('./views/games/blackjack.vue')
 
 const routes = [
     { path: '/', component: home, name: 'Home'},
     { path: '/login', component: login, name: 'Login'},
     { path: '/register', component: register, name: 'Register'},
     { path: '/dashboard', component: dashboard, name: 'Dashboard'},
+    { path: '/blackjack', component: blackjack, name: 'Blackjack'},
     { path: '/:pathMatch(.*)*', component: home, name: 'Home'},
 ]
 

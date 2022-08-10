@@ -24,8 +24,6 @@ mongoose.connect(database.db, {
     console.log('db error ' + error);
 })
 
-const userRoute = require('./route/user');
-
 const app = express();
 
 app.use(bodyParser.json());
@@ -37,9 +35,6 @@ const server = http.createServer(app);
 
 // Cors
 app.use(cors());
-
-// API
-app.use("/api/user", userRoute);
 
 // serve static files
 app.use(express.static(path.join(__dirname, "./dist")))

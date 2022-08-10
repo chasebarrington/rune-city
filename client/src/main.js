@@ -33,6 +33,9 @@ app.use(router);
 app.mount('#app');
 
 router.beforeEach((to) => {
+    if((to.name == 'Login' || to.name == 'Register') && authStore.isLoggedIn) {
+        return '/dashboard';
+    }
     if ((to.name !== 'Login' && to.name !== 'Register' && to.name !== 'Home') && !authStore.isLoggedIn) {
         console.log('not logged in'); 
         return '/login'

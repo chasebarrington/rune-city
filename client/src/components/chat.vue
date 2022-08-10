@@ -57,15 +57,15 @@ export default {
     window.addEventListener("resize", this.resizeWindow);
 
     this.$options.sockets.onmessage = (msg) => {
-      
+
       const message = JSON.parse(msg.data);
       if (message.type != 'message' && !Array.isArray(message)) {
         return;
       }
-      
+
       // if the message is an array, it's a batch of messages
       if (Array.isArray(message)) {
-        this.messages = this.messages.concat(message);
+        this.messages = message;
       } else {
         this.messages.push(message);
       }
@@ -95,7 +95,8 @@ export default {
 <template>
   <div id="chat" class="bg-zinc-900 border-r border-r-zinc-700 w-screen lg:w-80 fixed z-10" :class="minimized ? '-left-[100vw]' : 'left-0'">
     <div class="inputbox">
-      <textarea class="resize-none px-2 py-2" v-model="message" @keydown.enter.exact.prevent="send" @keydown.enter.shift.exact.prevent="message += '\r\n'" />
+      <label for="chatinput" class="absolute"></label>
+      <textarea placeholder="enter your message here :)" id="chatinput" name="chatinput" class="resize-none px-2 py-2" v-model="message" @keydown.enter.exact.prevent="send" @keydown.enter.shift.exact.prevent="message += '\r\n'" />
       <Button @click="send" color="emerald">send</Button>
     </div>
     <div class="messagebox">
