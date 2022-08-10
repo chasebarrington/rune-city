@@ -1,6 +1,5 @@
 <script>
 import Button from './ui/button.vue'
-import useAuthStore from '../store/auth';
 export default {
   props: {
     minimized: {
@@ -28,11 +27,9 @@ export default {
         if (!this.message || this.message.trim() === '') { 
             return this.notify('invalid message')
         };
-        
-        let store = useAuthStore();
 
         // check if user is logged in and user is valid
-        if (!store.isLoggedIn) {
+        if (!this.$auth.isLoggedIn) {
             return this.notify('not logged in')
         }
 
@@ -41,7 +38,7 @@ export default {
 
         this.$socket.sendObj({
             type: 'message',
-            token: store.token,
+            token: this.$auth.token,
             msg: this.message
         });
         this.message = '';

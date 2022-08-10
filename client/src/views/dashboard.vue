@@ -11,8 +11,6 @@
 </template>
 
 <script>
-import { mapState } from 'pinia'
-import useAuthStore from '../store/auth'
 export default {
     data() {
         return {
@@ -24,7 +22,9 @@ export default {
         }
     },
     computed: {
-        ...mapState(useAuthStore, ['user']),
+        user() {
+            return this.$auth.user
+        },
         balance() {
             return this.user.balance
         }

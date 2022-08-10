@@ -1,50 +1,3 @@
-<script>
-import Button from '../components/ui/button.vue'
-import useAuthStore from '../store/auth'
-
-export default {
-  data() {
-    return {
-      username: '',
-      password: '',
-      error: ''
-    }
-  },
-  methods: {
-    submit() {
-      if(this.username == '' || this.password == '') {
-        this.error = 'Please fill in all fields';
-        return
-      }
-      this.$socket.sendObj({
-          type: 'auth',
-          action: 'login',
-          username: this.username,
-          password: this.password
-      });
-    }
-  },
-  mounted() {
-    let store = useAuthStore();
-    if(store.isLoggedIn) {
-      return this.$router.push('/dashboard');
-    }
-
-    this.$options.sockets.onmessage = (msg) => {
-      const message = JSON.parse(msg.data);
-      if(message.type == 'auth') {
-          store.login(message.user, message.token);
-      } else if(message.type == 'error') {
-          this.error = message.message;
-      } 
-    }
-  },
-  components: {
-    Button
-  }
-}
-</script>
-
 <template>
   <div class="antialiased bg-zinc-900 min-h-screen-nav w-full text-center max-w-none px-4">
     <div class="max-w-xl lg:max-w-2xl mx-auto py-24">
@@ -78,3 +31,48 @@ export default {
       </div>
   </div>
 </template>
+
+<script>
+import Button from '../components/ui/button.vue'
+
+export default {
+  data() {
+    return {
+      username: '',
+      password: '',
+      error: ''
+    }
+  },
+  methods: {
+    submit() {
+      if(this.username == '' || this.password == '') {
+        this.error = 'Please fill in all fields';
+        return
+      }
+      this.$socket.sendObj({
+          type: 'auth',
+          action: 'login',
+          username: this.username,
+          password: this.password
+      });
+    }
+  },
+  mounted() {
+    if(this.$auth.isLoggedIn) {
+      return this.$router.push('/dashboard');
+    }
+    this.$options.sockets.onmessage = (msg) => {
+      const message = JSON.parse(msg.data);
+      if(message.type == 'auth') {
+          this.$auth.login(message.user, message.token);
+          this.$router.push('/dashboard');
+      } else if(message.type == 'error') {
+          this.error = message.message;
+      } 
+    }
+  },
+  components: {
+    Button
+  }
+}
+</script>

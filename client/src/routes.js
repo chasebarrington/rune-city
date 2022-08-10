@@ -1,5 +1,4 @@
 import {createRouter, createWebHistory} from 'vue-router'
-import useAuthStore from './store/auth'
 
 const home = () => import('./views/home.vue')
 const login = () => import('./views/login.vue')
@@ -17,14 +16,6 @@ const routes = [
 const router = createRouter({
     history: createWebHistory(),
     routes,
-})
-
-router.beforeEach((to) => {
-    const store = useAuthStore();
-    if ((to.name !== 'Login' && to.name !== 'Register' && to.name !== 'Home') && !store.isLoggedIn) {
-        console.log('not logged in'); 
-        return '/login'
-    }
 })
 
 export default router

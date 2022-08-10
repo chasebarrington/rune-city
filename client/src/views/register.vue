@@ -48,7 +48,6 @@
 
 <script>
 import Button from '../components/ui/button.vue'
-import useAuthStore from '../store/auth'
 
 export default {
   data() {
@@ -77,15 +76,14 @@ export default {
     }
   },
   mounted() {
-    let store = useAuthStore();
-    if(store.isLoggedIn) {
+    if(this.$auth.isLoggedIn) {
       return this.$router.push('/dashboard');
     }
 
     this.$options.sockets.onmessage = (msg) => {
       const message = JSON.parse(msg.data);
       if(message.type == 'auth') {
-          store.login(message.user, message.token);
+          this.$auth.login(message.user, message.token);
       } else if(message.type == 'error') {
           this.error = message.message;
       } 

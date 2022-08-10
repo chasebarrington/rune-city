@@ -22,18 +22,17 @@ export default defineStore({
             this.token = token;
             localStorage.setItem('user', JSON.stringify(user));
             localStorage.setItem('token', token);
-            this.$router.push({ name: 'Dashboard' }); 
         },
         logout() {
             this.user = null;
+            this.token = null;
             localStorage.removeItem('user');
             localStorage.removeItem('token');
         }
     },
     getters: {
         isLoggedIn() {
-            const token = this.token || localStorage.getItem('token');
-            return !!token && !isTokenExpired(token);
+            return !!this.token && !isTokenExpired(this.token);
         }
     }
 });
