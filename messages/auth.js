@@ -155,7 +155,6 @@ async function login(msg, ws) {
             balance: userExists.balance,
         }
     }));
-
 }
 
 module.exports = {

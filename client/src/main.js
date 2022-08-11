@@ -37,7 +37,7 @@ router.beforeEach((to) => {
         return '/dashboard';
     }
     if ((to.name !== 'Login' && to.name !== 'Register' && to.name !== 'Home') && !authStore.isLoggedIn) {
-        console.log('not logged in'); 
+        authStore.logout();
         return '/login'
     }
 })

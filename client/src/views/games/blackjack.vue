@@ -5,15 +5,20 @@
             <h2>feeling lucky, {{user.user}}? 🤑</h2>
             <div class="relative w-fit mx-auto">
                 <p>balance: {{interpolatedBalance || balance}}</p>
+                <p v-if="win" class="absolute right-0 text-emerald-400 transition-all" :class="'translate-y-' + translatey + ' opacity-' + opacity">+{{win}}</p>
+                <p v-if="loss" class="absolute right-0 text-rose-400 transition-all" :class="'translate-y-' + translatey + ' opacity-' + opacity">-{{loss}}</p>
             </div>
         </div>
-        <div class="w-full rounded-bl-full rounded-br-full border-8 border-t-0 border-black bg-green-900 h-1/2">
-        </div>
+        <Game></Game>
     </div>
 </template>
 
 <script>
+import Game from '../../components/blackjack/Game.vue'
 export default {
+    components: {
+        Game
+    },
     data() {
         return {
             win: 0,

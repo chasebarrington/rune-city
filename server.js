@@ -8,8 +8,10 @@ let express     = require('express'),
     bodyParser  = require('body-parser'),
     createError = require('http-errors'),
     path        = require("path"),
+    jwt         = require('jsonwebtoken'),
     chat        = require('./messages/chat'),
-    auth        = require('./messages/auth')
+    auth        = require('./messages/auth'),
+    game        = require('./messages/game')
 
 require('dotenv').config();
 
@@ -81,6 +83,20 @@ wss.on('connection', (ws) => {
             return;
         }
 
+        // check if token is provided
+        if(!message.token && message.type != 'auth')
+            return;
+
+        message.decoded = false;
+
+        // check if token is valid
+        jwt.verify(message.token, process.env.JWT_SECRET, (err, decoded) => {
+            if (err) {
+                return;
+            }
+            message.decoded = decoded;
+        });
+
         // switch statement for message types
         switch (message.type) {
             case 'message':
@@ -88,6 +104,9 @@ wss.on('connection', (ws) => {
                 break;
             case 'auth':
                 auth.handle(message, ws, wss);
+                break;
+            case 'game':
+                game.handle(message, ws, wss);
                 break;
             default:
                 break;

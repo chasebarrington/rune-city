@@ -28,6 +28,10 @@ export default defineStore({
             this.token = null;
             localStorage.removeItem('user');
             localStorage.removeItem('token');
+        },
+        setBalance(balance) {
+            this.user.balance = balance;
+            localStorage.setItem('user', JSON.stringify(this.user));
         }
     },
     getters: {
