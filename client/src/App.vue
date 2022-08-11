@@ -7,6 +7,28 @@ export default {
       toggle: true
     }
   },
+  mounted() {
+    this.$options.sockets.onmessage = (msg) => {
+
+        const message = JSON.parse(msg.data);
+        const arr = Array.isArray(message);
+
+        if (message.type != 'bet' && !arr) 
+            return;
+
+        if(arr && message.length > 0 && message[0].type != 'bet') 
+            return;
+
+        if(arr) {
+            this.$auth.bets = message;
+        } else {
+            if(this.$auth.bets.length > 6) {
+                this.$auth.bets.shift();
+            }
+            this.$auth.bets.push(message);
+        }
+    }
+  },
   components: {
     chat,
     navbar

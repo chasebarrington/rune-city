@@ -72,7 +72,9 @@ export default {
                 <p v-if="loss" class="absolute right-0 text-rose-400 transition-all" :class="'translate-y-' + translatey + ' opacity-' + opacity">-{{loss}}</p>
             </div>
             <Game></Game>
+            <div class="pt-6">
+                <bets></bets>
+            </div>
         </div>
-        <bets></bets>
     </div>
 </template>
