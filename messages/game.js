@@ -1,9 +1,9 @@
 const blackjack = require("./games/blackjack");
 
-function handle(msg, ws) {
+function handle(msg, ws, wss) {
     switch (msg.game_type) {
         case 'blackjack':
-            blackjack.handle(msg, ws);
+            blackjack.handle(msg, ws, wss);
         default:
             break;
     }

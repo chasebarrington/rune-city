@@ -1,23 +1,10 @@
-<template>
-    <div class="antialiased bg-zinc-900 min-h-screen-nav w-full text-center max-w-none px-4">
-        <div class="py-6">
-            <h1 class="text-zinc-100 mb-4">Blackjack</h1>
-            <h2>feeling lucky, {{user.user}}? 🤑</h2>
-            <div class="relative w-fit mx-auto">
-                <p>balance: {{interpolatedBalance || balance}}</p>
-                <p v-if="win" class="absolute right-0 text-emerald-400 transition-all" :class="'translate-y-' + translatey + ' opacity-' + opacity">+{{win}}</p>
-                <p v-if="loss" class="absolute right-0 text-rose-400 transition-all" :class="'translate-y-' + translatey + ' opacity-' + opacity">-{{loss}}</p>
-            </div>
-        </div>
-        <Game></Game>
-    </div>
-</template>
-
 <script>
 import Game from '../../components/blackjack/Game.vue'
+import bets from '../../components/bets.vue'
 export default {
     components: {
-        Game
+        Game,
+        bets
     },
     data() {
         return {
@@ -73,3 +60,19 @@ export default {
     }
 }
 </script>
+
+<template>
+    <div class="antialiased bg-zinc-900 min-h-screen-nav w-full text-center max-w-none px-4">
+        <div class="py-6">
+            <h1 class="text-zinc-100 mb-4">Blackjack</h1>
+            <h2>feeling lucky, {{user.user}}? 🤑</h2>
+            <div class="relative w-fit mx-auto">
+                <p>balance: {{interpolatedBalance || balance}}</p>
+                <p v-if="win" class="absolute right-0 text-emerald-400 transition-all" :class="'translate-y-' + translatey + ' opacity-' + opacity">+{{win}}</p>
+                <p v-if="loss" class="absolute right-0 text-rose-400 transition-all" :class="'translate-y-' + translatey + ' opacity-' + opacity">-{{loss}}</p>
+            </div>
+            <Game></Game>
+        </div>
+        <bets></bets>
+    </div>
+</template>

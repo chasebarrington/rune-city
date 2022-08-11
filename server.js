@@ -12,6 +12,7 @@ let express     = require('express'),
     chat        = require('./messages/chat'),
     auth        = require('./messages/auth'),
     game        = require('./messages/game')
+    bets        = require('./messages/bets');
 
 require('dotenv').config();
 
@@ -76,6 +77,7 @@ wss.on('connection', (ws) => {
     ws.clients = clients;
 
     chat.send_history(ws);
+    bets.send_history(ws);
 
     ws.on('message', (data) => {
         const message = safe_parse(data);

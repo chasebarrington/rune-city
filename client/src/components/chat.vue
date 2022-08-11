@@ -59,12 +59,18 @@ export default {
     this.$options.sockets.onmessage = (msg) => {
 
       const message = JSON.parse(msg.data);
-      if (message.type != 'message' && !Array.isArray(message)) {
+      const arr = Array.isArray(message);
+
+      if (message.type != 'message' && !arr) {
+        return;
+      }
+
+      if(arr && message.length > 0 && message[0].type != 'message') {
         return;
       }
 
       // if the message is an array, it's a batch of messages
-      if (Array.isArray(message)) {
+      if (arr) {
         this.messages = message;
       } else {
         this.messages.push(message);

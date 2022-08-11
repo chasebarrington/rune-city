@@ -1,15 +1,16 @@
 const { performance } = require('perf_hooks');
+const bets = require("../bets");
 
-function handle(msg, ws) {
+function handle(msg, ws, wss) {
     switch (msg.action) {
         case 'join':
-            return find_game(ws, msg);
+            return find_game(ws, msg, wss);
         case 'hit':
-            return hit(ws, msg);
+            return hit(ws, msg, wss);
         case 'stand':
-            return stand(ws, msg);
+            return stand(ws, msg, wss);
         case 'deal':
-            return deal(ws, msg);
+            return deal(ws, msg, wss);
         default:
             break;
     }
@@ -49,7 +50,12 @@ function calculate_hand_value(hand) {
 }
 
 // clone game and remove deck for sending to client
-function send_to_client(ws, game, hide_dealer, balance){
+function send_to_client(ws, game, hide_dealer, balance, user, wss){
+
+    if(game.finished && !game.was_requested) {
+        bets.send(user, game.bet, 'blackjack', game.win, game.tie, wss)
+    }
+
     return ws.send(JSON.stringify({
         type: 'game',
         game_type: 'blackjack',
@@ -66,7 +72,7 @@ function send_to_client(ws, game, hide_dealer, balance){
     ));
 }
 
-async function find_game(ws, message){
+async function find_game(ws, message, wss){
     
     // check if decoded token is valid
     if (!message.decoded)
@@ -96,12 +102,14 @@ async function find_game(ws, message){
 
     // if game is not finished, only send the dealers second card
     if (!game.finished)
-        return send_to_client(ws, game, true, userExists.balance);
+        return send_to_client(ws, game, true, userExists.balance, userExists.user, wss);
+
+    game.was_requested = true;
     
-    return send_to_client(ws, game, false, userExists.balance);
+    return send_to_client(ws, game, false, userExists.balance, userExists.user, wss);
 }
 
-async function hit(ws, message){
+async function hit(ws, message, wss){
 
     var startTime = performance.now()
 
@@ -178,10 +186,10 @@ async function hit(ws, message){
     console.log(`hit took ${endTime - startTime} milliseconds`)
 
     // if player is not busted, return game
-    return send_to_client(ws, game, true, userExists.balance);
+    return send_to_client(ws, game, true, userExists.balance, userExists.user, wss);
 }
 
-async function stand(ws, message){
+async function stand(ws, message, wss){
 
     var startTime = performance.now()
 
@@ -250,10 +258,10 @@ async function stand(ws, message){
     console.log(`stand took ${endTime - startTime} milliseconds`)
 
     // return game back to client
-    return send_to_client(ws, game, false, userExists.balance);
+    return send_to_client(ws, game, false, userExists.balance, userExists.user, wss);
 }
 
-async function deal(ws, message) {
+async function deal(ws, message, wss) {
 
     var startTime = performance.now()
 
@@ -371,10 +379,10 @@ async function deal(ws, message) {
     console.log(`deal took ${endTime - startTime} milliseconds`)
 
     if(finished)
-        return send_to_client(ws, game, false, userExists.balance);
+        return send_to_client(ws, game, false, userExists.balance, userExists.user, wss);
 
     // send game back to client
-    return send_to_client(ws, game, true, userExists.balance);
+    return send_to_client(ws, game, true, userExists.balance, userExists.user, wss);
 }
 
 module.exports = {

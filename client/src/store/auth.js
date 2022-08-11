@@ -15,6 +15,7 @@ export default defineStore({
     state: () => ({
         user: JSON.parse(localStorage.getItem('user')),
         token: localStorage.getItem('token'),
+        bets: []
     }),
     actions: {
         login(user, token) {
@@ -32,6 +33,9 @@ export default defineStore({
         setBalance(balance) {
             this.user.balance = balance;
             localStorage.setItem('user', JSON.stringify(this.user));
+        },
+        setBets(bets) {
+            this.bets = bets;
         }
     },
     getters: {
