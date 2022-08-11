@@ -53,8 +53,11 @@ export default ({
             token: this.$auth.token,
         });
 
+        console.log('send')
+
         this.$options.sockets.onmessage = (msg) => {
             const message = JSON.parse(msg.data);
+            console.log(message)
 
             // if message is not a game message, ignore it
             if(message.type !== 'game') return;

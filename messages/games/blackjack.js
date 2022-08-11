@@ -56,6 +56,8 @@ function send_to_client(ws, game, hide_dealer, balance, user, wss){
         bets.send(user, game.bet, 'blackjack', game.win, game.tie, wss)
     }
 
+    console.log("sending game to client");
+
     return ws.send(JSON.stringify({
         type: 'game',
         game_type: 'blackjack',

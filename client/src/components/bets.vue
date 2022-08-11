@@ -1,5 +1,10 @@
 <script>
 export default {
+    data() {
+        return {
+            last_recv: 0
+        }
+    },
     computed: {
         bets() {
             return this.$auth.bets
@@ -7,11 +12,11 @@ export default {
     },
     mounted() {
         this.$options.sockets.onmessage = (msg) => {
-            
-            let bets = this.bets;
 
+            // if we received a message within the last 100ms, ignore it
+            if (this.last_recv + 100 > Date.now()) return;
+        
             const message = JSON.parse(msg.data);
-            console.log(message);
             const arr = Array.isArray(message);
 
             if (message.type != 'bet' && !arr) {
@@ -22,10 +27,12 @@ export default {
                 return;
             }
 
+            let bets = this.bets;
+
             if(arr)
                 bets = message;
             else {
-                if(bets.length > 7) {
+                if(bets.length > 6) {
                     bets.shift();
                 }
                 bets.push(message);

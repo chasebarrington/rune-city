@@ -12,8 +12,6 @@ function send_history(ws) {
 
 function send(user, bet, type, win, tie, wss){
 
-    console.log(user, bet, type, win, tie);
-
     let payout = 0;
     if(win)
         payout = bet * 2;
