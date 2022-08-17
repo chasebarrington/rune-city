@@ -6,7 +6,7 @@
         <div v-for="(card, index) in cards" :key="index">
             <Card :index="index"  class="card translate-x-72 transition-transform" :suit="card.suit" :face="card.face" :color="card.color" :glow-class="glowClass" />
         </div>
-        <p class="absolute -top-4 -right-4 bg-zinc-900 border border-zinc-700 rounded-full h-fit px-2 py-1 z-50">{{handValue}}</p>
+        <p class="absolute -top-4 -right-4 bg-zinc-900 border border-zinc-700 rounded-full h-fit px-2 py-1 z-10">{{handValue}}</p>
     </div>
 </template>
 
@@ -34,26 +34,17 @@ export default {
         player: {
             type: Boolean,
             default: false
-        }
+        },
+        sound: {
+            type: Boolean,
+            required: true,
+            default: true
+        },
     },
-    updated() {
-
-        // calculate card color from the card suit
-        let cardColor = (cardSuit) => {
-            let color = '';
-            if(cardSuit === '♥' || cardSuit === '♦') {
-                color = 'red';
-            } else {
-                color = 'black';
-            }
-            return color;
+    data() {
+        return {
+            lastAudio: Date.now()
         }
-
-        // update card color
-        this.cards.forEach(card => {
-            card.color = cardColor(card.suit);
-        });
-
     },
     computed: {
         // calculate hand value
@@ -92,6 +83,20 @@ export default {
         }
     },
     updated() {
+
+        if(this.lastAudio < Date.now() - 100 && this.sound && !this.player) {
+            var audio = new Audio('/dealer.wav');
+            audio.volume = 0.8;
+            audio.playbackRate = 1.5;
+            audio.play();
+            this.lastAudio = Date.now();
+        }
+
+        if(this.player && this.sound && this.win) {
+            var audio = new Audio('/win.wav');
+            audio.play();
+        }
+
         var elements = document.getElementsByClassName("card");
         for(var i = 0; i < elements.length; i++) {
             let elem = elements[i];
@@ -99,9 +104,31 @@ export default {
                 elem.classList.remove('translate-x-72');
             }, 50 * elem.getAttribute('index'));
         }
+
+        // calculate card color from the card suit
+        let cardColor = (cardSuit) => {
+            let color = '';
+            if(cardSuit === '♥' || cardSuit === '♦') {
+                color = 'red';
+            } else {
+                color = 'black';
+            }
+            return color;
+        }
+
+        // update card color
+        this.cards.forEach(card => {
+            card.color = cardColor(card.suit);
+        });
+
     },
     methods: {
         deal() {
+            if(this.player && this.sound) {
+                var audio = new Audio('/player.wav');
+                audio.volume = 0.8;
+                audio.play();
+            }
             var elements = document.getElementsByClassName("card");
             for(var i = 0; i < elements.length; i++) {
                 let elem = elements[i];

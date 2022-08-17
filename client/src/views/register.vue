@@ -80,6 +80,7 @@ export default {
       const message = JSON.parse(msg.data);
       if(message.type == 'auth') {
           this.$auth.login(message.user, message.token);
+          this.$router.push('/dashboard');
       } else if(message.type == 'error') {
           this.error = message.message;
       } 

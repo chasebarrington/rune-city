@@ -56,8 +56,6 @@ function send_to_client(ws, game, hide_dealer, balance, user, wss){
         bets.send(user, game.bet, 'blackjack', game.win, game.tie, wss)
     }
 
-    console.log("sending game to client");
-
     return ws.send(JSON.stringify({
         type: 'game',
         game_type: 'blackjack',
@@ -112,8 +110,6 @@ async function find_game(ws, message, wss){
 }
 
 async function hit(ws, message, wss){
-
-    var startTime = performance.now()
 
     // check if decoded token is valid
     if (!message.decoded)
@@ -184,9 +180,6 @@ async function hit(ws, message, wss){
     // update game in mongodb
     await game.save();
 
-    var endTime = performance.now()
-    console.log(`hit took ${endTime - startTime} milliseconds`)
-
     // if player is not busted, return game
     return send_to_client(ws, game, true, userExists.balance, userExists.user, wss);
 }
@@ -256,16 +249,11 @@ async function stand(ws, message, wss){
     game.finished = true;
     await game.save();
 
-    var endTime = performance.now()
-    console.log(`stand took ${endTime - startTime} milliseconds`)
-
     // return game back to client
     return send_to_client(ws, game, false, userExists.balance, userExists.user, wss);
 }
 
 async function deal(ws, message, wss) {
-
-    var startTime = performance.now()
 
     // check if decoded token is valid
     if (!message.decoded)
@@ -376,9 +364,6 @@ async function deal(ws, message, wss) {
     }
 
     game.save();
-
-    var endTime = performance.now()
-    console.log(`deal took ${endTime - startTime} milliseconds`)
 
     if(finished)
         return send_to_client(ws, game, false, userExists.balance, userExists.user, wss);

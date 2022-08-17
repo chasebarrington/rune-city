@@ -14,7 +14,7 @@
                 <td class="px-2 py-1">{{bet.game_type}}</td>
                 <td class="px-2 py-1">{{bet.user}}</td>
                 <td class="px-2 py-1">{{bet.bet}}</td>
-                <td class="px-2 py-1">{{bet.payout}}</td>
+                <td class="px-2 py-1" :class="bet.payout > 0 ? 'text-emerald-400' : 'text-rose-500'">{{bet.payout}}</td>
             </tr> 
         </tbody>
     </table>

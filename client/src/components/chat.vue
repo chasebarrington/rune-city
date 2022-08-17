@@ -11,7 +11,12 @@ export default {
     return {
       message: '',
       footerText: '',
-      messages: []
+      messages: [],
+    }
+  },
+  computed: {
+    user() {
+        return this.$auth.user || { user: { user: '' } };
     }
   },
   methods: {
@@ -99,16 +104,20 @@ export default {
 </script>
 
 <template>
-  <div id="chat" class="bg-zinc-900 border-r border-r-zinc-700 w-screen lg:w-80 fixed z-10" :class="minimized ? '-left-[100vw]' : 'left-0'">
-    <div class="inputbox">
+  <div id="chat" class="bg-zinc-800 border-r border-r-zinc-700 w-screen lg:w-80 fixed z-20" :class="minimized ? '-left-[100vw]' : 'left-0'">
+    <div class="inputbox bg-zinc-900">
       <label for="chatinput" class="absolute"></label>
       <textarea placeholder="enter your message here :)" id="chatinput" name="chatinput" class="resize-none px-2 py-2" v-model="message" @keydown.enter.exact.prevent="send" @keydown.enter.shift.exact.prevent="message += '\r\n'" />
       <Button @click="send" color="emerald">send</Button>
     </div>
     <div class="messagebox">
       <div id="chatbox" class="messages">
-        <div v-for="(message, index) in messages" :key="index" class="message break-words whitespace-pre-line">
-          {{message.user + ': ' + message.msg}}
+        <div v-for="(message, index) in messages" :key="index">
+          <div class="flex w-fit" :class="message.user == this.user.user ? 'ml-auto' : ''" v-if="messages[index - 1] == null || (messages[index - 1] != null && messages[index - 1].user != messages[index].user)">
+            <div class="text-lg text-zinc-100">{{message.user}}</div>
+            <div class="text-sm text-zinc-400 pl-2 pt-2">{{message.date}}</div>
+          </div>
+          <div class="message break-words whitespace-pre-line" :class="message.user == this.user.user ? 'ml-auto' : ''" >{{message.msg}}</div>
         </div>
       </div>
       <div v-if="footerText" class="text-rose-500 text-center mt-2">{{footerText}}</div>
@@ -120,13 +129,12 @@ export default {
 
 .inputbox {
   width:100%;
-  height:2.5rem;
-  padding-left:8px;
-  padding-right:8px;
+  height:3.5rem;
+  padding:8px;
   display:flex;
   column-gap:8px;
   position:absolute;
-  bottom:8px;
+  bottom:0px;
 }
 
 textarea {
@@ -139,9 +147,10 @@ textarea {
 .message {
   color: rgb(147 197 253);
   background-color: rgb(51 65 85);
-  padding: 4px;
+  width: fit-content;
+  padding: 6px 10px 6px 10px;
   margin-top: 4px;
-  border-radius: 0.125rem;
+  border-radius: 0.7rem;
 }
 
 .messages {
@@ -156,7 +165,7 @@ textarea {
 
 .messagebox {
     width: 100%;
-    height: calc(100% - 3rem);
+    height: calc(100% - 3.5rem);
     padding: 8px;
     display: flex;
     flex-direction: column;

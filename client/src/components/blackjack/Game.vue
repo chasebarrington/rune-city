@@ -1,12 +1,14 @@
 <template>
     <body>
         <div v-if='!err' class="max-w-lg mx-auto">
-            <div class="bg-gradient-to-b from-emerald-900 to-emerald-700 border border-emerald-400 h-fit py-12 mx-auto rounded-lg rounded-b-none overflow-x-hidden grid gap-y-12 mt-6">
-                <Deck ref="deck" :cards="game.dealer"></Deck>
-                <Deck ref="deck" :cards="game.hand" :player="true" :win="game.win" :tie="game.tie" :finished="game.finished"></Deck>
+            <div class="bg-gradient-to-b from-emerald-900 to-emerald-700 border border-emerald-400 h-fit py-12 mx-auto rounded-lg rounded-b-none overflow-x-hidden grid gap-y-12 mt-6 relative">
+                <button v-if="this.sound" @click="sound = !sound" class="absolute top-4 left-4">🔊</button>
+                <button v-if="!this.sound" @click="sound = !sound" class="absolute top-4 left-4">🔈</button>
+                <Deck ref="deck" :cards="game.dealer" :sound="this.sound"></Deck>
+                <Deck ref="deck" :cards="game.hand" :sound="this.sound" :player="true" :win="game.win" :tie="game.tie" :finished="game.finished"></Deck>
             </div>
             <div class="border border-zinc-700 mx-auto px-4 py-4 rounded-lg rounded-t-none w-full">
-                <div class="flex flex-wrap gap-x-4 gap-y-4 place-content-center" v-if="game.finished">
+                <div class="flex flex-wrap gap-x-4 gap-y-4 place-content-center" v-if="game.finished || game.unstarted">
                     <input type="text" v-model="bet" class="appearance-none border border-zinc-700 rounded w-20 py-2 px-3 bg-zinc-800 text-zinc-200" placeholder="1000">
                     <Button v-on:click="double" color="emerald">2x</Button>
                     <Button v-on:click="half" color="slate">1/2</Button>
@@ -17,7 +19,7 @@
                         </svg>
                     </Button>
                 </div>
-                <div v-if="!game.finished" class="flex flex-wrap gap-x-4 gap-y-4 place-content-center">
+                <div v-else class="flex flex-wrap gap-x-4 gap-y-4 place-content-center">
                     <p class="self-center py-2 px-2 bg-zinc-800 border border-zinc-700 rounded-lg">Bet: {{game.bet}}</p>
                     <Button v-on:click="hit" color="emerald">Hit</Button>
                     <Button v-on:click="stand" color="slate">Stand</Button>
@@ -39,10 +41,12 @@ export default ({
                 bet: 0,
                 finished: false,
                 win: false,
-                tie: false
+                tie: false,
+                unstarted: true
             },
             bet: '',
-            err: false
+            err: false,
+            sound: true
         }
     },
     mounted(){

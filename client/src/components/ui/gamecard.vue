@@ -22,7 +22,7 @@ export default {
 
 <template>
     <router-link :to="to" class="w-fit group">
-        <img class="transition-transform group-hover:scale-110" :alt="title"
+        <img class="transition-transform group-hover:scale-110 shadow-black shadow-lg" :alt="title"
         :srcset="img + '?tx=w_'+small + ' ' + small + 'w,'
         + ' ' + img + '?tx=w_'+large + ' ' + large + 'w'"
         :sizes="'(max-width: 640px) ' + small + 'px, ' + large + 'px'">

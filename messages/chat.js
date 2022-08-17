@@ -3,7 +3,6 @@ const WebSocket = require('ws');
 let msgs = [];
 
 function send_history(ws) {
-    console.log(msgs);
     setTimeout(() => {
         ws.send(JSON.stringify(msgs));
     }, 1000);
@@ -27,10 +26,19 @@ function say(message, ws, wss) {
         }));
     }
 
+    let date = new Date();
+
+    // get time in EST timezone
+    let time = date.toLocaleString('en-US', {
+        timeZone: 'America/New_York',
+        timeStyle: 'short'
+    });
+
     let new_msg = {
         type: 'message',
         msg: message.msg,
-        user: message.user
+        user: message.user,
+        date: time
     }
     
     if (msgs.length > 100) {

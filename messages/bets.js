@@ -4,7 +4,6 @@ const user = require('../model/user');
 let bets = [];
 
 function send_history(ws) {
-    console.log(bets);
     setTimeout(() => {
         ws.send(JSON.stringify(bets));
     }, 1000);

@@ -62,7 +62,7 @@ export default {
 </script>
 
 <template>
-    <div class="antialiased bg-zinc-900 min-h-screen-nav w-full text-center max-w-none px-4">
+    <div class="antialiased bg-zinc-900 min-h-screen-nav w-screen text-center max-w-none px-4">
         <div class="py-6">
             <h1 class="text-zinc-100 mb-4">Blackjack</h1>
             <h2>feeling lucky, {{user.user}}? 🤑</h2>
