@@ -104,8 +104,6 @@ async function login(msg, ws) {
     const user = msg.username;
     const password = msg.password;
 
-    console.log('got here')
-
     // validate user input
     if (!user || !password) {
         return ws.send(JSON.stringify({

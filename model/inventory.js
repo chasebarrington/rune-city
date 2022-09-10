@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const inventorySchema = new mongoose.Schema({
   _id: { type: String, unique: true },
   items: [{
-    id: { type: Number },
+    _id: { type: Number },
     count: { type: Number }
   }]
 });
